@@ -1,0 +1,3 @@
+
+class SqliteFileNotFoundError(Exception):
+    pass
