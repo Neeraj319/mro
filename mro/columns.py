@@ -3,7 +3,7 @@ class BaseColumn:
         self.null = null
         self.primary_key = primary_key
 
-    def get_db_representation(self) -> str:
+    def get_schema(self) -> str:
         rep_string = ""
         if self.null:
             rep_string += " NULL"
@@ -22,9 +22,9 @@ class VarChar(BaseColumn):
         super().__init__(null=null, primary_key=primary_key)
         self._max_length = max_length
 
-    def get_db_representation(self: "VarChar"):
+    def get_schema(self: "VarChar"):
         rep_string = f'"%(column_name)s" VARCHAR({self.max_length}) '
-        return rep_string + super().get_db_representation()
+        return rep_string + super().get_schema()
 
     @property
     def max_length(self) -> int:
@@ -35,5 +35,5 @@ class Int(BaseColumn):
     def __init__(self, null: bool = False, primary_key: bool = False) -> None:
         super().__init__(null=null, primary_key=primary_key)
 
-    def get_db_representation(self) -> str:
-        return '"%(column_name)s" INT' + super().get_db_representation()
+    def get_schema(self) -> str:
+        return '"%(column_name)s" INT' + super().get_schema()

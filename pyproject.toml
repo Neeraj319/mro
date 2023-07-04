@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.10"
 black = "^23.3.0"
 typing-extensions = "^4.7.1"
+mypy = "^1.4.1"
 
 
 [build-system]
