@@ -36,6 +36,6 @@ class BaseTable:
             if key not in cls.__dict__.keys():
                 raise exceptions.InvalidColumnAttribute(key, cls.__name__)
 
-        query = query_builder.QueryBuilder.insert(cls.__name__, **kwargs)
-        cls.cursor.execute(query)
+        query = query_builder.insert(cls.__name__, **kwargs)
+        cls.cursor.execute(query, tuple(kwargs.values()))
         cls.connection.commit()
