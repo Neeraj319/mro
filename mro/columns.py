@@ -10,6 +10,10 @@ class BaseColumn:
         if self.primary_key:
             rep_string += " PRIMARY KEY"
         return rep_string
+    
+    @classmethod
+    def get_class_name(cls) -> str:
+        return cls.__name__.lower()
 
 
 class VarChar(BaseColumn):

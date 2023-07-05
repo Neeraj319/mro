@@ -12,3 +12,13 @@ def insert(class_name: str, **kwargs):
 
     query += ");"
     return query
+
+
+def select(class_name: str, columns: tuple[str], **condition):
+    query = f"SELECT "
+    for index, column in enumerate(columns):
+        query += f'"{column}" '
+        if index != len(columns) - 1:
+            query += ", "
+    query += f"from {class_name}"
+    return query
