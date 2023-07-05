@@ -60,25 +60,17 @@ class BaseTable:
         return cls.__name__.lower()
 
     @classmethod
-    def select(
-        cls, connection: sqlite3.Connection, select_columns: tuple = (), **where: Any
-    ):
+    def select(cls, connection: sqlite3.Connection, **where: Any):
         class_columns = cls.get_columns()
         class_name = cls.get_class_name()
-        if len(select_columns) == 0:
-            select_columns = tuple(class_columns.keys())
-        else:
-            for _column in select_columns:
-                if _column not in class_columns:
-                    raise exceptions.InvalidColumnAttribute(
-                        f"attribute: `{_column}` for class `{class_name}`"
-                    )
+        select_columns = tuple(class_columns.keys())
+
         query = query_builder.select(class_name, select_columns, **where)
         res = connection.cursor().execute(query, tuple(where.values()))
         values = res.fetchall()
         query_result = list()
         for r in values:
-            result = map_query_result_with_class(class_columns, r)
+            result = map_query_result_with_class(select_columns, r)
             _object = cls()
             for key, value in result.items():
                 setattr(_object, key, value)
