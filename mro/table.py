@@ -1,7 +1,7 @@
-from typing import Any
-from mro import columns, exceptions
 import sqlite3
-from mro import query_builder
+from typing import Any
+
+from mro import columns, exceptions, query_builder
 
 
 class BaseTable:

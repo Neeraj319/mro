@@ -1,6 +1,7 @@
 import sqlite3
-from mro.table import BaseTable
 from typing import Type
+
+from mro.table import BaseTable
 
 
 class BaseClass:
