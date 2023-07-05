@@ -5,9 +5,6 @@ from mro import query_builder
 
 
 class BaseTable:
-    connection: sqlite3.Connection
-    cursor: sqlite3.Cursor
-
     @classmethod
     def get_table_schema(cls) -> str:
         _class_dict = cls.__dict__
@@ -31,11 +28,18 @@ class BaseTable:
         return f"{schema});"
 
     @classmethod
-    def insert(cls, **kwargs: Any):
-        for key in kwargs.keys():
+    def insert(cls, connection: sqlite3.Connection, **kwargs: Any):
+        for key, value in kwargs.items():
             if key not in cls.__dict__.keys():
-                raise exceptions.InvalidColumnAttribute(key, cls.__name__)
+                raise exceptions.InvalidColumnAttribute(
+                    f"attribute: `{key}` of class `{cls.__name__}`"
+                )
+            if not isinstance(value, cls.__dict__[key].supported_types):
+                raise exceptions.InvalidDataTypeGiven(
+                    f"value: `{value}`, attribute: `{key}` of class `{cls.__name__}` "
+                    f"expected type: {cls.__dict__[key].__class__.__name__}"
+                )
 
         query = query_builder.insert(cls.__name__, **kwargs)
-        cls.cursor.execute(query, tuple(kwargs.values()))
-        cls.connection.commit()
+        connection.cursor.execute(query, tuple(kwargs.values()))
+        connection.commit()

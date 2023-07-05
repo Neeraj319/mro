@@ -23,12 +23,12 @@ class VarChar(BaseColumn):
         self._max_length = max_length
 
     def get_schema(self: "VarChar"):
-        rep_string = f'"%(column_name)s" VARCHAR({self.max_length}) '
-        return rep_string + super().get_schema()
+        schema = f'"%(column_name)s" VARCHAR({self._max_length}) '
+        return schema + super().get_schema()
 
     @property
-    def max_length(self) -> int:
-        return self._max_length
+    def supported_types(self):
+        return (str,)
 
 
 class Int(BaseColumn):
@@ -40,3 +40,7 @@ class Int(BaseColumn):
         if self.primary_key:
             schema += " AUTOINCREMENT"
         return schema
+
+    @property
+    def supported_types(self):
+        return (int,)

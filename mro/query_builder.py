@@ -5,7 +5,7 @@ def insert(class_name: str, **kwargs):
         if index != len(kwargs.keys()) - 1:
             query += ", "
     query += ") VALUES ("
-    for index, (value) in enumerate(kwargs.values()):
+    for index, (_) in enumerate(kwargs.values()):
         query += "?"
         if index != len(kwargs.values()) - 1:
             query += ","
