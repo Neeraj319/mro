@@ -36,4 +36,7 @@ class Int(BaseColumn):
         super().__init__(null=null, primary_key=primary_key)
 
     def get_schema(self) -> str:
-        return '"%(column_name)s" INT' + super().get_schema()
+        schema = '"%(column_name)s" INTEGER ' + super().get_schema()
+        if self.primary_key:
+            schema += " AUTOINCREMENT"
+        return schema
