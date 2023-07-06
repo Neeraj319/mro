@@ -12,6 +12,7 @@ typing-extensions = "^4.7.1"
 mypy = "^1.4.1"
 pytest = "^7.4.0"
 isort = "^5.12.0"
+pre-commit = "^3.3.3"
 
 
 [build-system]

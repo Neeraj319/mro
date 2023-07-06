@@ -13,5 +13,10 @@ class ClassTableIsMissingColumnAttributes(Exception):
 class InvalidColumnAttribute(Exception):
     pass
 
+
 class InvalidDataTypeGiven(Exception):
+    pass
+
+
+class ClassTableNotRegistered(Exception):
     pass
