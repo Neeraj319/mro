@@ -5,9 +5,9 @@ from mro.table import BaseTable
 
 
 class BaseClass:
-    def __init__(self, sqlite_filename: str, create_table: bool = False) -> None:
+    def __init__(self, sqlite_filename: str, create_tables: bool = False) -> None:
         self.sqlite_filename = sqlite_filename
-        self.create_table = create_table
+        self.create_tables = create_tables
         self._tables: list[Type[BaseTable]] = []
 
     def _create_tables(self):
@@ -23,7 +23,7 @@ class BaseClass:
         for table in self._tables:
             table.db.class_table = table
 
-        if self.create_table:
+        if self.create_tables:
             self._create_tables()
 
     def __enter__(self) -> sqlite3.Connection:
