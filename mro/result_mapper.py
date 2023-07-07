@@ -1,9 +1,12 @@
 from typing import Any
 
 
-def map_query_result_with_class(class_table, result: list[Any]):
-    class_columns = class_table.get_columns()
-    _object = class_table()
-    for index, column in enumerate(class_columns):
-        setattr(_object, column, result[index])
-    return _object
+def map_query_result_with_class(class_table, results: list[Any]):
+    class_columns = class_table.get_columns().keys()
+    _objects = list()
+    for row in results:
+        _object = class_table()
+        for _column_index, column in enumerate(class_columns):
+            setattr(_object, column, row[_column_index])
+        _objects.append(_object)
+    return _objects
