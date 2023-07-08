@@ -2,17 +2,12 @@ import sqlite3
 from typing import Any
 
 from mro import exceptions, validators
-from mro.columns import BaseColumn
 from mro.result_mapper import map_query_result_with_class
 
+from .interface import AbstractBaseTable, AbstractQueryBuilder
 
-class QueryBuilder:
-    def __init__(self) -> None:
-        self.query = ""
-        self.class_table_columns: dict[str, BaseColumn] = {}
-        self.class_table_name = ""
-        self.query_paramets = []
 
+class QueryBuilder(AbstractQueryBuilder):
     def _set_class_table_values(self) -> None:
         self.class_table_columns = self.class_table.get_columns()
         self.class_table_name = self.class_table.get_class_name()
@@ -31,7 +26,7 @@ class QueryBuilder:
             raise exceptions.ClassTableNotRegistered()
         return super().__getattribute__(__name)
 
-    def insert(self, **kwargs) -> "QueryBuilder":
+    def insert(self, **kwargs) -> AbstractQueryBuilder:
         validators.validate_class_table_columns(self.class_table, **kwargs)
         validators.validate_class_table_data(self.class_table, **kwargs)
 
@@ -62,7 +57,7 @@ class QueryBuilder:
 
     def select(
         self,
-    ) -> "QueryBuilder":
+    ) -> AbstractQueryBuilder:
         self.query = f"SELECT "
         for index, column in enumerate(self.class_table_columns):
             self.query += f'"{column}" '
@@ -71,7 +66,7 @@ class QueryBuilder:
         self.query += f"from {self.class_table_name}"
         return self
 
-    def execute(self, connection: sqlite3.Connection):
+    def execute(self, connection: sqlite3.Connection) -> None | list[AbstractBaseTable]:
         res = connection.cursor().execute(self.query, tuple(self.query_paramets))
         connection.commit()
         result = res.fetchall()

@@ -1,7 +1,11 @@
-from typing import Any
+from typing import Any, Type
+
+from interface import AbstractBaseTable
 
 
-def map_query_result_with_class(class_table, results: list[Any]):
+def map_query_result_with_class(
+    class_table: Type[AbstractBaseTable], results: list[Any]
+) -> list[AbstractBaseTable]:
     class_columns = class_table.get_columns().keys()
     _objects = list()
     for row in results:

@@ -1,7 +1,9 @@
-from mro import columns, exceptions, query_builder
+from mro import exceptions, query_builder
+
+from .interface import AbstractBaseColumn, AbstractBaseTable
 
 
-class BaseTable:
+class BaseTable(AbstractBaseTable):
     db = query_builder.QueryBuilder()
 
     @classmethod
@@ -21,10 +23,10 @@ class BaseTable:
         return f"{schema});"
 
     @classmethod
-    def get_columns(cls) -> dict[str, columns.BaseColumn]:
+    def get_columns(cls) -> dict[str, AbstractBaseColumn]:
         table_columns = {}
         for attr, value in cls.__dict__.items():
-            if issubclass(value.__class__, (columns.BaseColumn)):
+            if issubclass(value.__class__, (AbstractBaseColumn)):
                 table_columns[attr] = value
         return table_columns
 

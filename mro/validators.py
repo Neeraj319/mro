@@ -1,7 +1,11 @@
+from typing import Type
+
 from mro import exceptions
 
+from .interface import AbstractBaseTable
 
-def validate_class_table_columns(class_table, **kwargs):
+
+def validate_class_table_columns(class_table: Type[AbstractBaseTable], **kwargs):
     class_columns = class_table.get_columns()
     class_name = class_table.get_class_name()
     for key in kwargs.keys():
@@ -11,7 +15,7 @@ def validate_class_table_columns(class_table, **kwargs):
             )
 
 
-def validate_class_table_data(class_table, **kwargs):
+def validate_class_table_data(class_table: Type[AbstractBaseTable], **kwargs):
     class_columns = class_table.get_columns()
     class_name = class_table.get_class_name()
     for key, value in kwargs.items():

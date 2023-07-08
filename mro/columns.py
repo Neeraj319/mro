@@ -1,8 +1,7 @@
-class BaseColumn:
-    def __init__(self, null: bool = False, primary_key: bool = False) -> None:
-        self.null = null
-        self.primary_key = primary_key
+from mro.interface import AbstractBaseColumn
 
+
+class BaseColumn(AbstractBaseColumn):
     def get_schema(self) -> str:
         rep_string = ""
         if self.null:
@@ -10,7 +9,7 @@ class BaseColumn:
         if self.primary_key:
             rep_string += " PRIMARY KEY"
         return rep_string
-    
+
     @classmethod
     def get_class_name(cls) -> str:
         return cls.__name__.lower()
