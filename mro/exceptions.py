@@ -20,3 +20,11 @@ class InvalidDataTypeGiven(Exception):
 
 class ClassTableNotRegistered(Exception):
     pass
+
+
+class IntegrityError(Exception):
+    pass
+
+
+class SqliteInterfaceErro(Exception):
+    pass

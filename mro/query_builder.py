@@ -67,7 +67,15 @@ class QueryBuilder(AbstractQueryBuilder):
         return self
 
     def execute(self, connection: sqlite3.Connection) -> None | list[AbstractBaseTable]:
-        res = connection.cursor().execute(self.query, tuple(self.query_paramets))
+        try:
+            res = connection.cursor().execute(self.query, tuple(self.query_paramets))
+        except sqlite3.IntegrityError as e:
+            raise exceptions.IntegrityError(e)
+        except sqlite3.InterfaceError:
+            raise exceptions.SqliteInterfaceErro(
+                "Interface error due to bug in sqlite3 api"
+            )
+
         connection.commit()
         result = res.fetchall()
         self.query = ""
