@@ -1,6 +1,6 @@
 from typing import Any, Type
 
-from interface import AbstractBaseTable
+from .interface import AbstractBaseTable
 
 
 def map_query_result_with_class(
