@@ -1,20 +1,27 @@
 import sqlite3
 from abc import ABC, abstractmethod
-from typing import Any, Type
+from typing import Any, NewType, Type
+
+
+class WhereClause(str):
+    """
+    Used to represent a where clause in a query
+    """
+
+
+where_clause = NewType("where_clause", WhereClause)
 
 
 class AbstractBaseColumn(ABC):
+    query_builder: "AbstractQueryBuilder"
+    column_name: str
+
     def __init__(self, null: bool = False, primary_key: bool = False) -> None:
         self.null = null
         self.primary_key = primary_key
 
     @abstractmethod
     def get_schema(self) -> str:
-        ...
-
-    @classmethod
-    @abstractmethod
-    def get_class_name(cls) -> str:
         ...
 
     @property
@@ -41,6 +48,16 @@ class AbstractBaseTable(ABC):
     def get_class_name(cls) -> str:
         ...
 
+    @classmethod
+    @abstractmethod
+    def _inject_query_builder_to_columns(cls):
+        ...
+
+    @classmethod
+    @abstractmethod
+    def _inject_cloumn_name_to_columns(cls):
+        ...
+
 
 class AbstractQueryBuilder(ABC):
     class_table: Type[AbstractBaseTable]
@@ -49,7 +66,7 @@ class AbstractQueryBuilder(ABC):
         self.query = ""
         self.class_table_columns: dict[str, AbstractBaseColumn] = {}
         self.class_table_name = ""
-        self.query_paramets = []
+        self.query_parameters = []
 
     @abstractmethod
     def insert(self, **kwargs) -> "AbstractQueryBuilder":
@@ -61,6 +78,18 @@ class AbstractQueryBuilder(ABC):
 
     @abstractmethod
     def execute(self, connection: sqlite3.Connection):
+        ...
+
+    @abstractmethod
+    def where(self, clause) -> "AbstractQueryBuilder":
+        ...
+
+    @abstractmethod
+    def and_(self, __value: object) -> "AbstractQueryBuilder":
+        ...
+
+    @abstractmethod
+    def or_(self, __value: object) -> "AbstractQueryBuilder":
         ...
 
     @abstractmethod

@@ -10,9 +10,29 @@ class BaseColumn(AbstractBaseColumn):
             rep_string += " PRIMARY KEY"
         return rep_string
 
-    @classmethod
-    def get_class_name(cls) -> str:
-        return cls.__name__.lower()
+    def __eq__(self: AbstractBaseColumn, other: object) -> str:
+        self.query_builder.query_parameters.append(other)
+        return self.column_name + " = ?"
+
+    def __lt__(self, __value: object) -> str:
+        self.query_builder.query_parameters.append(__value)
+        return self.column_name + " < ?"
+
+    def __gt__(self, __value: object) -> str:
+        self.query_builder.query_parameters.append(__value)
+        return self.column_name + " > ?"
+
+    def __le__(self, __value: object) -> str:
+        self.query_builder.query_parameters.append(__value)
+        return self.column_name + " <= ?"
+
+    def __ge__(self, __value: object) -> str:
+        self.query_builder.query_parameters.append(__value)
+        return self.column_name + " >= ?"
+
+    def __ne__(self, __value: object) -> str:
+        self.query_builder.query_parameters.append(__value)
+        return self.column_name + " != ?"
 
 
 class VarChar(BaseColumn):

@@ -28,3 +28,7 @@ class IntegrityError(Exception):
 
 class SqliteInterfaceErro(Exception):
     pass
+
+
+class OperationalError(Exception):
+    pass

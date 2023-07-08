@@ -22,6 +22,8 @@ class DatabaseManger(AbstractDatabaseManager):
         self._tables = tables
         for table in self._tables:
             table.db.class_table = table
+            table._inject_query_builder_to_columns()
+            table._inject_cloumn_name_to_columns()
 
         if self.create_tables:
             self._create_tables()

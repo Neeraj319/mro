@@ -23,6 +23,16 @@ class BaseTable(AbstractBaseTable):
         return f"{schema});"
 
     @classmethod
+    def _inject_query_builder_to_columns(cls):
+        for column in cls.get_columns().values():
+            column.query_builder = cls.db
+
+    @classmethod
+    def _inject_cloumn_name_to_columns(cls):
+        for column_name, column in cls.get_columns().items():
+            column.column_name = column_name
+
+    @classmethod
     def get_columns(cls) -> dict[str, AbstractBaseColumn]:
         table_columns = {}
         for attr, value in cls.__dict__.items():
