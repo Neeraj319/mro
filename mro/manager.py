@@ -1,6 +1,8 @@
 import sqlite3
 from typing import Type
 
+from mro import query_builder
+
 from .interface import (
     AbstractBaseTable,
     AbstractConnectionManger,
@@ -36,6 +38,7 @@ class DatabaseManger(AbstractDatabaseManager):
     def register_tables(self, tables: list[Type[AbstractBaseTable]]) -> None:
         self._tables = tables
         for table in self._tables:
+            table.db = query_builder.QueryBuilder()
             table.db.class_table = table
             table._inject_query_builder_to_columns()
             table._inject_cloumn_name_to_columns()

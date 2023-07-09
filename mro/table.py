@@ -4,8 +4,6 @@ from .interface import AbstractBaseColumn, AbstractBaseTable
 
 
 class BaseTable(AbstractBaseTable):
-    db = query_builder.QueryBuilder()
-
     @classmethod
     def get_table_schema(cls) -> str:
         table_name = cls.get_class_name()

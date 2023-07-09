@@ -53,6 +53,14 @@ class QueryBuilder(AbstractQueryBuilder):
                 self.query += ", "
 
         self.query += ");"
+
+        l_right_paren = self.query.rfind(")")
+        l_left_paren = self.query.rfind("(")
+        f_right_paren = self.query.find(")")
+        f_left_paren = self.query.find("(")
+        if l_right_paren - l_left_paren == 1 and f_right_paren - f_left_paren == 1:
+            self.query = f'INSERT INTO "{self.class_table_name}" DEFAULT VALUES;'
+
         return self
 
     def and_(self, __value: object) -> "QueryBuilder":
