@@ -19,11 +19,11 @@ class Blog(table.BaseTable):
 base_manager = manager.DatabaseManger("test.db", create_tables=True)
 base_manager.register_tables([Blog])
 
-with base_manager as connection:
+with base_settings.get_connection() as connection:
     Blog.db.insert(title="something").execute(connection)
     Blog.db.insert(title="something else").execute(connection)
     Blog.db.insert(title="Loo rem").execute(connection)
-    Blog.db.insert(title="Foo bar").execute(connection)
+    Blog.db.insert(title="Loo Geda").execute(connection)
     blogs = (
         Blog.db.select()
         .where(Blog.title == "something")
