@@ -4,8 +4,8 @@ from mro.interface import AbstractBaseColumn
 class BaseColumn(AbstractBaseColumn):
     def get_schema(self) -> str:
         rep_string = ""
-        if self.null:
-            rep_string += " NULL"
+        if not self.null:
+            rep_string += " NOT NULL"
         if self.primary_key:
             rep_string += " PRIMARY KEY"
         return rep_string
@@ -67,3 +67,16 @@ class Int(BaseColumn):
     @property
     def supported_types(self):
         return (int,)
+
+
+class Text(BaseColumn):
+    def __init__(self, null: bool = False, primary_key: bool = False) -> None:
+        super().__init__(null=null, primary_key=primary_key)
+
+    def get_schema(self) -> str:
+        schema = '"%(column_name)s" TEXT ' + super().get_schema()
+        return schema
+
+    @property
+    def supported_types(self):
+        return (str,)
