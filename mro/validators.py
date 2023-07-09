@@ -56,6 +56,6 @@ def validate_varchar_max_length(class_table: Type[AbstractBaseTable], **kwargs):
 
 
 def validate(class_table: Type[AbstractBaseTable], **kwargs):
-    for name, validtor in globals().items():
+    for name, validator in globals().items():
         if name.startswith("validate_"):
-            validtor(class_table, **kwargs)
+            validator(class_table, **kwargs)

@@ -80,3 +80,16 @@ class Text(BaseColumn):
     @property
     def supported_types(self):
         return (str,)
+
+
+class Float(BaseColumn):
+    def __init__(self, null: bool = False, primary_key: bool = False) -> None:
+        super().__init__(null=null, primary_key=primary_key)
+
+    def get_schema(self) -> str:
+        schema = '"%(column_name)s" REAL ' + super().get_schema()
+        return schema
+
+    @property
+    def supported_types(self):
+        return (float, int)

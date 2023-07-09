@@ -1,7 +1,7 @@
 import sqlite3
 from typing import Any
 
-from mro import exceptions, validators
+from mro import exceptions, parsers, validators
 from mro.result_mapper import map_query_result_with_class
 
 from .interface import AbstractBaseTable, AbstractQueryBuilder, where_clause
@@ -28,6 +28,7 @@ class QueryBuilder(AbstractQueryBuilder):
 
     def insert(self, **kwargs) -> AbstractQueryBuilder:
         validators.validate(self.class_table, **kwargs)
+        parsers.parse(self.class_table, **kwargs)
 
         self.query = f'INSERT INTO "{self.class_table_name}" ('
         for index, (column_name, _column) in enumerate(
