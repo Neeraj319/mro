@@ -23,7 +23,6 @@ with base_settings.get_connection() as connection:
     Blog.db.insert(title="something").execute(connection)
     Blog.db.insert(title="something else").execute(connection)
     Blog.db.insert(title="Loo rem").execute(connection)
-    Blog.db.insert(title="Loo Geda").execute(connection)
     blogs = (
         Blog.db.select()
         .where(Blog.title == "something")
