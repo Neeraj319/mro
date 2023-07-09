@@ -97,15 +97,25 @@ class AbstractQueryBuilder(ABC):
         ...
 
 
+class AbstractConnectionManger(ABC):
+    sqlite_filename: str
+
+    def __init__(self, sqlite_filename: str) -> None:
+        self.sqlite_filename: str = sqlite_filename
+
+    @abstractmethod
+    def __enter__(self) -> sqlite3.Connection:
+        ...
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        ...
+
+
 class AbstractDatabaseManager(ABC):
     @abstractmethod
     def register_tables(self, table: Type[AbstractBaseTable]) -> None:
         ...
 
     @abstractmethod
-    def __enter__(self) -> sqlite3.Connection:
-        ...
-
-    @abstractmethod
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def get_connection(self) -> sqlite3.Connection:
         ...
