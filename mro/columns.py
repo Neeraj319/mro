@@ -8,6 +8,8 @@ class BaseColumn(AbstractBaseColumn):
             rep_string += " NOT NULL"
         if self.primary_key:
             rep_string += " PRIMARY KEY"
+        if self.unique:
+            rep_string += " UNIQUE"
         return rep_string
 
     def __eq__(self: AbstractBaseColumn, other: object) -> str:
@@ -41,8 +43,9 @@ class VarChar(BaseColumn):
         max_length: int,
         null: bool = False,
         primary_key: bool = False,
+        unique: bool = False,
     ) -> None:
-        super().__init__(null=null, primary_key=primary_key)
+        super().__init__(null=null, primary_key=primary_key, unique=unique)
         self._max_length = max_length
 
     def get_schema(self: "VarChar"):
@@ -55,8 +58,10 @@ class VarChar(BaseColumn):
 
 
 class Int(BaseColumn):
-    def __init__(self, null: bool = False, primary_key: bool = False) -> None:
-        super().__init__(null=null, primary_key=primary_key)
+    def __init__(
+        self, null: bool = False, primary_key: bool = False, unique: bool = False
+    ) -> None:
+        super().__init__(null=null, primary_key=primary_key, unique=unique)
 
     def get_schema(self) -> str:
         schema = '"%(column_name)s" INTEGER ' + super().get_schema()
@@ -70,8 +75,10 @@ class Int(BaseColumn):
 
 
 class Text(BaseColumn):
-    def __init__(self, null: bool = False, primary_key: bool = False) -> None:
-        super().__init__(null=null, primary_key=primary_key)
+    def __init__(
+        self, null: bool = False, primary_key: bool = False, unique: bool = False
+    ) -> None:
+        super().__init__(null=null, primary_key=primary_key, unique=unique)
 
     def get_schema(self) -> str:
         schema = '"%(column_name)s" TEXT ' + super().get_schema()
@@ -83,8 +90,10 @@ class Text(BaseColumn):
 
 
 class Float(BaseColumn):
-    def __init__(self, null: bool = False, primary_key: bool = False) -> None:
-        super().__init__(null=null, primary_key=primary_key)
+    def __init__(
+        self, null: bool = False, primary_key: bool = False, unique: bool = False
+    ) -> None:
+        super().__init__(null=null, primary_key=primary_key, unique=unique)
 
     def get_schema(self) -> str:
         schema = '"%(column_name)s" REAL ' + super().get_schema()

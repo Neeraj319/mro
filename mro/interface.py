@@ -16,9 +16,12 @@ class AbstractBaseColumn(ABC):
     query_builder: "AbstractQueryBuilder"
     column_name: str
 
-    def __init__(self, null: bool = False, primary_key: bool = False) -> None:
+    def __init__(
+        self, null: bool = False, primary_key: bool = False, unique: bool = False
+    ) -> None:
         self.null = null
         self.primary_key = primary_key
+        self.unique = unique
 
     @abstractmethod
     def get_schema(self) -> str:
