@@ -10,6 +10,8 @@ class BaseColumn(AbstractBaseColumn):
             rep_string += " PRIMARY KEY"
         if self.unique:
             rep_string += " UNIQUE"
+        if self.default is not None:
+            rep_string += f" DEFAULT {self.default}"
         return rep_string
 
     def __eq__(self: AbstractBaseColumn, other: object) -> str:
@@ -44,8 +46,11 @@ class VarChar(BaseColumn):
         null: bool = False,
         primary_key: bool = False,
         unique: bool = False,
+        default: str | None = None,
     ) -> None:
-        super().__init__(null=null, primary_key=primary_key, unique=unique)
+        super().__init__(
+            null=null, primary_key=primary_key, unique=unique, default=default
+        )
         self._max_length = max_length
 
     def get_schema(self: "VarChar"):
@@ -54,14 +59,20 @@ class VarChar(BaseColumn):
 
     @property
     def supported_types(self):
-        return (str,)
+        return (str,) + super().supported_types
 
 
 class Int(BaseColumn):
     def __init__(
-        self, null: bool = False, primary_key: bool = False, unique: bool = False
+        self,
+        null: bool = False,
+        primary_key: bool = False,
+        unique: bool = False,
+        default: int | None = None,
     ) -> None:
-        super().__init__(null=null, primary_key=primary_key, unique=unique)
+        super().__init__(
+            null=null, primary_key=primary_key, unique=unique, default=default
+        )
 
     def get_schema(self) -> str:
         schema = '"%(column_name)s" INTEGER ' + super().get_schema()
@@ -71,14 +82,20 @@ class Int(BaseColumn):
 
     @property
     def supported_types(self):
-        return (int,)
+        return (int,) + super().supported_types
 
 
 class Text(BaseColumn):
     def __init__(
-        self, null: bool = False, primary_key: bool = False, unique: bool = False
+        self,
+        null: bool = False,
+        primary_key: bool = False,
+        unique: bool = False,
+        default: str | None = None,
     ) -> None:
-        super().__init__(null=null, primary_key=primary_key, unique=unique)
+        super().__init__(
+            null=null, primary_key=primary_key, unique=unique, default=default
+        )
 
     def get_schema(self) -> str:
         schema = '"%(column_name)s" TEXT ' + super().get_schema()
@@ -86,14 +103,20 @@ class Text(BaseColumn):
 
     @property
     def supported_types(self):
-        return (str,)
+        return (str,) + super().supported_types
 
 
 class Float(BaseColumn):
     def __init__(
-        self, null: bool = False, primary_key: bool = False, unique: bool = False
+        self,
+        null: bool = False,
+        primary_key: bool = False,
+        unique: bool = False,
+        default: float | None = None,
     ) -> None:
-        super().__init__(null=null, primary_key=primary_key, unique=unique)
+        super().__init__(
+            null=null, primary_key=primary_key, unique=unique, default=default
+        )
 
     def get_schema(self) -> str:
         schema = '"%(column_name)s" REAL ' + super().get_schema()
@@ -101,12 +124,14 @@ class Float(BaseColumn):
 
     @property
     def supported_types(self):
-        return (float, int)
+        return (float, int) + super().supported_types
 
 
 class Boolean(BaseColumn):
-    def __init__(self, null: bool = False, primary_key: bool = False) -> None:
-        super().__init__(null=null, primary_key=primary_key)
+    def __init__(
+        self, null: bool = False, primary_key: bool = False, default: bool | None = None
+    ) -> None:
+        super().__init__(null=null, primary_key=primary_key, default=default)
 
     def get_schema(self) -> str:
         schema = '"%(column_name)s" BOOLEAN ' + super().get_schema()
@@ -114,4 +139,4 @@ class Boolean(BaseColumn):
 
     @property
     def supported_types(self):
-        return (bool,)
+        return (bool,) + super().supported_types

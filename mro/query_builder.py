@@ -1,10 +1,11 @@
 import sqlite3
 from typing import Any
 
-from mro import exceptions, parsers, validators
+from mro import exceptions, parsers
 from mro.result_mapper import map_query_result_with_class
+from mro.validators import query_validators
 
-from .interface import AbstractBaseTable, AbstractQueryBuilder, where_clause
+from .interface import AbstractBaseTable, AbstractQueryBuilder
 
 
 class QueryBuilder(AbstractQueryBuilder):
@@ -27,7 +28,7 @@ class QueryBuilder(AbstractQueryBuilder):
         return super().__getattribute__(__name)
 
     def insert(self, **kwargs) -> AbstractQueryBuilder:
-        validators.validate(self.class_table, **kwargs)
+        query_validators.validate(self.class_table, **kwargs)
         parsers.parse(self.class_table, **kwargs)
 
         self.query = f'INSERT INTO "{self.class_table_name}" ('
@@ -36,6 +37,8 @@ class QueryBuilder(AbstractQueryBuilder):
         ):
             if _column.primary_key and _column.supported_types[0] == int:
                 continue
+            if _column.default:
+                continue
 
             self.query += f'"{column_name}"'
             if index != len(self.class_table_columns) - 1:
@@ -43,6 +46,8 @@ class QueryBuilder(AbstractQueryBuilder):
         self.query += ") VALUES ("
 
         for index, (_column, value) in enumerate(self.class_table_columns.items()):
+            if value.default:
+                continue
             if value.primary_key and value.supported_types[0] == int:
                 continue
             if value.null and kwargs.get(_column) is None:
@@ -93,7 +98,7 @@ class QueryBuilder(AbstractQueryBuilder):
         except sqlite3.IntegrityError as e:
             raise exceptions.IntegrityError(e)
         except sqlite3.InterfaceError:
-            raise exceptions.SqliteInterfaceErro(
+            raise exceptions.SqliteInterfaceError(
                 "Interface error due to bug in sqlite3 api"
             )
         except sqlite3.OperationalError as e:

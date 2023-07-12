@@ -1,5 +1,5 @@
 import sqlite3
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, abstractproperty
 from typing import Any, NewType, Type
 
 
@@ -17,20 +17,28 @@ class AbstractBaseColumn(ABC):
     column_name: str
 
     def __init__(
-        self, null: bool = False, primary_key: bool = False, unique: bool = False
+        self,
+        null: bool = False,
+        primary_key: bool = False,
+        unique: bool = False,
+        default: (str | bool | int | float | None) = None,
     ) -> None:
         self.null = null
         self.primary_key = primary_key
         self.unique = unique
 
+        self.default = default
+
     @abstractmethod
     def get_schema(self) -> str:
         ...
 
-    @property
-    @abstractmethod
+    @abstractproperty
     def supported_types(self) -> tuple[Any]:
-        return tuple()
+        if self.null:
+            return (None,)
+        else:
+            return tuple()
 
 
 class AbstractBaseTable(ABC):

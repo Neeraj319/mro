@@ -8,6 +8,7 @@ from .interface import (
     AbstractConnectionManger,
     AbstractDatabaseManager,
 )
+from .validators import extras
 
 
 class ConnectionManager(AbstractConnectionManger):
@@ -42,6 +43,7 @@ class DatabaseManger(AbstractDatabaseManager):
             table.db.class_table = table
             table._inject_query_builder_to_columns()
             table._inject_cloumn_name_to_columns()
+            extras.validate(table)
 
         if self.create_tables:
             self._create_tables()

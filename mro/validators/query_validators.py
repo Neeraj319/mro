@@ -1,9 +1,8 @@
 from typing import Type
 
 from mro import exceptions
-
-from .columns import VarChar
-from .interface import AbstractBaseTable
+from mro.columns import VarChar
+from mro.interface import AbstractBaseTable
 
 
 def validate_class_table_columns(class_table: Type[AbstractBaseTable], **kwargs):
