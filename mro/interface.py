@@ -107,6 +107,10 @@ class AbstractQueryBuilder(ABC):
     def _set_class_table_values(self) -> None:
         ...
 
+    @abstractmethod
+    def _clear(self) -> None:
+        ...
+
 
 class AbstractConnectionManger(ABC):
     sqlite_filename: str

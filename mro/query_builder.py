@@ -92,6 +92,10 @@ class QueryBuilder(AbstractQueryBuilder):
         self.query += clause
         return self
 
+    def _clear(self):
+        self.query = ""
+        self.query_parameters = []
+
     def execute(self, connection: sqlite3.Connection) -> None | list[AbstractBaseTable]:
         try:
             res = connection.cursor().execute(self.query, tuple(self.query_parameters))
@@ -108,8 +112,7 @@ class QueryBuilder(AbstractQueryBuilder):
 
         connection.commit()
         result = res.fetchall()
-        self.query = ""
-        self.query_parameters = []
+        self._clear()
         if not result:
             return None
         return map_query_result_with_class(self.class_table, result)
