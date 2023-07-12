@@ -10,8 +10,8 @@ def validate_class_table_columns(class_table: Type[AbstractBaseTable], **kwargs)
     class_name = class_table.get_class_name()
     for key in kwargs.keys():
         if key not in class_columns.keys():
-            raise exceptions.InvalidColumnAttribute(
-                f"attribute: `{key}` for class `{class_name}`"
+            raise exceptions.InvalidClassColumn(
+                f"attribute: `{key}` for class table `{class_name}`"
             )
 
 
@@ -20,7 +20,7 @@ def validate_class_table_data(class_table: Type[AbstractBaseTable], **kwargs):
     class_name = class_table.get_class_name()
     for key, value in kwargs.items():
         if not isinstance(value, getattr(class_table, key).supported_types):
-            raise exceptions.InvalidDataTypeGiven(
+            raise TypeError(
                 f"value: `{value}`, attribute: `{key}` of class `{class_name}` "
                 f"expected type(s): {class_columns[key].supported_types}"
             )
@@ -35,8 +35,8 @@ def validate_primary_key_null(class_table: Type[AbstractBaseTable], **kwargs):
             and value.supported_types[0] != int
             and kwargs.get(column_name) is None
         ):
-            raise exceptions.IntegrityError(
-                f"value: `{kwargs.get(column_name)}`, for primary key: `{column_name}` of class `{class_name}`"
+            raise TypeError(
+                f"Primary key is null for class column: `{column_name}` of class table `{class_name}`"
             )
 
 
@@ -49,7 +49,7 @@ def validate_varchar_max_length(class_table: Type[AbstractBaseTable], **kwargs):
                 continue
             if len(kwargs.get(column_name)) > value._max_length:
                 raise exceptions.IntegrityError(
-                    f"passed value for attribute: `{column_name}` of class `{class_name}`"
+                    f"passed value for class column: `{column_name}` of class table `{class_name}`"
                     f"exceeds max length: {value._max_length}"
                 )
 

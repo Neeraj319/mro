@@ -11,7 +11,7 @@ def validate_column_default_values(class_table: Type[AbstractBaseTable]) -> None
             if column.primary_key and column.supported_types[0] == int:
                 continue
             raise TypeError(
-                f"Column `{column_name}` default value is not of type "
+                f"Class Column `{column_name}` default value is not of type "
                 f"{column.supported_types}"
             )
 

@@ -10,11 +10,7 @@ class ClassTableIsMissingColumnAttributes(Exception):
     pass
 
 
-class InvalidColumnAttribute(Exception):
-    pass
-
-
-class InvalidDataTypeGiven(Exception):
+class InvalidClassColumn(Exception):
     pass
 
 
