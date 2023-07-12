@@ -37,7 +37,7 @@ class QueryBuilder(AbstractQueryBuilder):
         ):
             if _column.primary_key and _column.supported_types[0] == int:
                 continue
-            if _column.default:
+            if _column.default and kwargs.get(column_name) is None:
                 continue
 
             self.query += f'"{column_name}"'
@@ -46,7 +46,7 @@ class QueryBuilder(AbstractQueryBuilder):
         self.query += ") VALUES ("
 
         for index, (_column, value) in enumerate(self.class_table_columns.items()):
-            if value.default:
+            if value.default and kwargs.get(_column) is None:
                 continue
             if value.primary_key and value.supported_types[0] == int:
                 continue
@@ -90,6 +90,25 @@ class QueryBuilder(AbstractQueryBuilder):
     def where(self, clause) -> AbstractQueryBuilder:
         self.query += " WHERE "
         self.query += clause
+        return self
+
+    def update(self, **kwargs) -> AbstractQueryBuilder:
+        query_validators.validate(self.class_table, **kwargs)
+        query_validators.update_query_validate(**kwargs)
+
+        self.query = f'UPDATE "{self.class_table_name}" SET '
+        for index, (column_name, value) in enumerate(kwargs.items()):
+            if (
+                self.class_table_columns[column_name].primary_key
+                and self.class_table_columns[column_name].supported_types[0] == int
+            ):
+                continue
+
+            self.query += f'"{column_name}" = ?'
+            self.query_parameters.append(value)
+            if index != len(kwargs) - 1:
+                self.query += ", "
+
         return self
 
     def _clear(self):

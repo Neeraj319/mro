@@ -111,6 +111,10 @@ class AbstractQueryBuilder(ABC):
     def _clear(self) -> None:
         ...
 
+    @abstractmethod
+    def update(self, **kwargs) -> "AbstractQueryBuilder":
+        ...
+
 
 class AbstractConnectionManger(ABC):
     sqlite_filename: str

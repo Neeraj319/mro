@@ -28,3 +28,7 @@ class SqliteInterfaceError(Exception):
 
 class OperationalError(Exception):
     pass
+
+
+class EmptyUpdateQuery(Exception):
+    pass

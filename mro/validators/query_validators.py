@@ -54,6 +54,11 @@ def validate_varchar_max_length(class_table: Type[AbstractBaseTable], **kwargs):
                 )
 
 
+def update_query_validate(**kwargs):
+    if len(kwargs) == 0:
+        raise exceptions.EmptyUpdateQuery()
+
+
 def validate(class_table: Type[AbstractBaseTable], **kwargs):
     for name, validator in globals().items():
         if name.startswith("validate_"):

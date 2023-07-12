@@ -1,4 +1,4 @@
-from mro import exceptions, query_builder
+from mro import exceptions
 
 from .interface import AbstractBaseColumn, AbstractBaseTable
 
