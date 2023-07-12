@@ -111,6 +111,10 @@ class QueryBuilder(AbstractQueryBuilder):
 
         return self
 
+    def delete(self) -> AbstractQueryBuilder:
+        self.query = f'DELETE FROM "{self.class_table_name}"'
+        return self
+
     def _clear(self):
         self.query = ""
         self.query_parameters = []
