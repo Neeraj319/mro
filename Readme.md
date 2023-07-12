@@ -41,7 +41,7 @@ Default parameters in all the class columns are:
 :param null: default value is false, sets the column to be nullable.
 :param primary_key: default value is false, sets the column to be a primary key.
 :param unique: default value is False, sets the column to have unique values only.
-:param default: default value is None, set a default value for the supported data type of the column, in this case int.
+:param default: default value is None, set a default value for the supported data type of the column
 ```
 
 - By default if you don't pass any of these parameters while creating the class column object, it will create a `not null`, `not unique` and `non primary key` column in the database.
