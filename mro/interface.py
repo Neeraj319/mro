@@ -1,15 +1,6 @@
 import sqlite3
 from abc import ABC, abstractmethod, abstractproperty
-from typing import Any, NewType, Type
-
-
-class WhereClause(str):
-    """
-    Used to represent a where clause in a query
-    """
-
-
-where_clause = NewType("where_clause", WhereClause)
+from typing import Any, Type
 
 
 class AbstractBaseColumn(ABC):
