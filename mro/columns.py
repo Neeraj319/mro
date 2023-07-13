@@ -1,3 +1,5 @@
+import datetime
+
 from mro.interface import AbstractBaseColumn
 
 
@@ -11,7 +13,11 @@ class BaseColumn(AbstractBaseColumn):
         if self.unique:
             rep_string += " UNIQUE"
         if self.default is not None:
-            rep_string += f" DEFAULT {self.default}"
+            rep_string += f" DEFAULT "
+            if isinstance(self.default, datetime.datetime):
+                rep_string += f"'{self.default.strftime('%Y-%m-%d %H:%M:%S')}'"
+            else:
+                rep_string += f"{self.default} "
         return rep_string
 
     def __eq__(self: AbstractBaseColumn, other: object) -> str:
@@ -140,3 +146,26 @@ class Boolean(BaseColumn):
     @property
     def supported_types(self):
         return (bool,) + super().supported_types
+
+
+class DateTime(BaseColumn):
+    def __init__(
+        self,
+        null: bool = False,
+        unique: bool = False,
+        primary_key: bool = False,
+        default: datetime.datetime | None = None,
+        auto_now_add: bool = False,
+    ) -> None:
+        super().__init__(
+            null=null, primary_key=primary_key, default=default, unique=unique
+        )
+        self.auto_now_add = auto_now_add
+
+    def get_schema(self) -> str:
+        schema = '"%(column_name)s" TIMESTAMP ' + super().get_schema()
+        return schema
+
+    @property
+    def supported_types(self):
+        return (datetime.datetime,) + super().supported_types

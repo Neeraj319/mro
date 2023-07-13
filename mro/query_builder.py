@@ -29,7 +29,7 @@ class QueryBuilder(AbstractQueryBuilder):
 
     def insert(self, **kwargs) -> AbstractQueryBuilder:
         query_validators.validate(self.class_table, **kwargs)
-        parsers.parse(self.class_table, **kwargs)
+        parsers.parse(self.class_table, kwargs)
 
         self.query = f'INSERT INTO "{self.class_table_name}" ('
         for index, (column_name, _column) in enumerate(

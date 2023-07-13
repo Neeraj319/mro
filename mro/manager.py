@@ -13,7 +13,10 @@ from .validators import extras
 
 class ConnectionManager(AbstractConnectionManger):
     def __enter__(self) -> sqlite3.Connection:
-        self.connection = sqlite3.connect(self.sqlite_filename)
+        self.connection = sqlite3.connect(
+            self.sqlite_filename,
+            detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES,
+        )
         return self.connection
 
     def __exit__(self, exc_type, exc_val, exc_tb):

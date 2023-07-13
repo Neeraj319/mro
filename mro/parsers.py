@@ -1,28 +1,38 @@
+import datetime
 from typing import Type
 
-from .columns import Float, Int
+from .columns import DateTime, Float, Int
 from .interface import AbstractBaseTable
 
 
-def parse_float_column(class_table: Type[AbstractBaseTable], **kwargs):
+def parse_float_column(class_table: Type[AbstractBaseTable], _query_dict: dict):
     class_columns = class_table.get_columns()
     for column_name, value in class_columns.items():
         if isinstance(value, Float):
-            if kwargs.get(column_name) is None:
+            if _query_dict.get(column_name) is None:
                 continue
-            kwargs[column_name] = float(kwargs[column_name])
+            _query_dict[column_name] = float(_query_dict[column_name])
 
 
-def parse_int_column(class_table: Type[AbstractBaseTable], **kwargs):
+def parse_int_column(class_table: Type[AbstractBaseTable], _query_dict):
     class_columns = class_table.get_columns()
     for column_name, value in class_columns.items():
         if isinstance(value, Int):
-            if kwargs.get(column_name) is None:
+            if _query_dict.get(column_name) is None:
                 continue
-            kwargs[column_name] = int(kwargs[column_name])
+            _query_dict[column_name] = int(_query_dict[column_name])
 
 
-def parse(class_table: Type[AbstractBaseTable], **kwargs):
+def parse_datetime_column(class_table: Type[AbstractBaseTable], _query_dict):
+    class_columns = class_table.get_columns()
+    for column_name, value in class_columns.items():
+        if isinstance(value, DateTime):
+            if _query_dict.get(column_name) is None and not value.auto_now_add:
+                continue
+            _query_dict[column_name] = datetime.datetime.now()
+
+
+def parse(class_table: Type[AbstractBaseTable], _query_dict):
     for name, parser in globals().items():
         if name.startswith("parse_"):
-            parser(class_table, **kwargs)
+            parser(class_table, _query_dict)

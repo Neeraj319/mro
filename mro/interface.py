@@ -1,3 +1,4 @@
+import datetime
 import sqlite3
 from abc import ABC, abstractmethod, abstractproperty
 from typing import Any, Type
@@ -17,7 +18,7 @@ class AbstractBaseColumn(ABC):
         null: bool = False,
         primary_key: bool = False,
         unique: bool = False,
-        default: (str | bool | int | float | None) = None,
+        default: (str | bool | int | float | None | datetime.datetime) = None,
     ) -> None:
         self.null = null
         self.primary_key = primary_key
