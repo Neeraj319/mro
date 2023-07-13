@@ -18,7 +18,9 @@ class AbstractBaseColumn(ABC):
         null: bool = False,
         primary_key: bool = False,
         unique: bool = False,
-        default: (str | bool | int | float | None | datetime.datetime) = None,
+        default: (
+            str | bool | int | float | None | datetime.datetime | datetime.date
+        ) = None,
     ) -> None:
         self.null = null
         self.primary_key = primary_key

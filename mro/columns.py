@@ -169,3 +169,26 @@ class DateTime(BaseColumn):
     @property
     def supported_types(self):
         return (datetime.datetime,) + super().supported_types
+
+
+class Date(BaseColumn):
+    def __init__(
+        self,
+        null: bool = False,
+        unique: bool = False,
+        primary_key: bool = False,
+        default: datetime.date | None = None,
+        auto_now_add: bool = False,
+    ) -> None:
+        super().__init__(
+            null=null, primary_key=primary_key, default=default, unique=unique
+        )
+        self.auto_now_add = auto_now_add
+
+    def get_schema(self) -> str:
+        schema = '"%(column_name)s" DATE ' + super().get_schema()
+        return schema
+
+    @property
+    def supported_types(self):
+        return (datetime.date,) + super().supported_types
