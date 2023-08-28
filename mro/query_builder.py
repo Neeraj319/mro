@@ -9,14 +9,14 @@ from .interface import AbstractBaseTable, AbstractQueryBuilder
 
 
 class QueryBuilder(AbstractQueryBuilder):
-    def _set_class_table_values(self) -> None:
+    def __set_class_table_values(self) -> None:
         self.class_table_columns = self.class_table.get_columns()
         self.class_table_name = self.class_table.get_class_name()
 
     def __setattr__(self, __name: str, __value: Any) -> None:
         if __name == "class_table":
             super().__setattr__(__name, __value)
-            self._set_class_table_values()
+            self.__set_class_table_values()
             return
         return super().__setattr__(__name, __value)
 
@@ -31,7 +31,7 @@ class QueryBuilder(AbstractQueryBuilder):
         query_validators.validate(self.class_table, **kwargs)
         parsers.parse(self.class_table, kwargs)
 
-        self.query = f'INSERT INTO "{self.class_table_name}" ('
+        self.__query = f'INSERT INTO "{self.class_table_name}" ('
         for index, (column_name, _column) in enumerate(
             self.class_table_columns.items()
         ):
@@ -40,10 +40,10 @@ class QueryBuilder(AbstractQueryBuilder):
             if _column.default and kwargs.get(column_name) is None:
                 continue
 
-            self.query += f'"{column_name}"'
+            self.__query += f'"{column_name}"'
             if index != len(self.class_table_columns) - 1:
-                self.query += ", "
-        self.query += ") VALUES ("
+                self.__query += ", "
+        self.__query += ") VALUES ("
 
         for index, (_column, value) in enumerate(self.class_table_columns.items()):
             if value.default and kwargs.get(_column) is None:
@@ -52,51 +52,51 @@ class QueryBuilder(AbstractQueryBuilder):
                 continue
             if value.null and kwargs.get(_column) is None:
                 value = None
-            self.query += "?"
+            self.__query += "?"
             self.query_parameters.append(kwargs.get(_column))
             if index != len(self.class_table_columns) - 1:
-                self.query += ", "
+                self.__query += ", "
 
-        self.query += ");"
+        self.__query += ");"
 
-        l_right_paren = self.query.rfind(")")
-        l_left_paren = self.query.rfind("(")
-        f_right_paren = self.query.find(")")
-        f_left_paren = self.query.find("(")
+        l_right_paren = self.__query.rfind(")")
+        l_left_paren = self.__query.rfind("(")
+        f_right_paren = self.__query.find(")")
+        f_left_paren = self.__query.find("(")
         if l_right_paren - l_left_paren == 1 and f_right_paren - f_left_paren == 1:
-            self.query = f'INSERT INTO "{self.class_table_name}" DEFAULT VALUES;'
+            self.__query = f'INSERT INTO "{self.class_table_name}" DEFAULT VALUES;'
 
         return self
 
     def and_(self, __value: object) -> "QueryBuilder":
-        self.query += f" AND {__value}"
+        self.__query += f" AND {__value}"
         return self
 
     def or_(self, __value: object) -> "QueryBuilder":
-        self.query += f" OR {__value}"
+        self.__query += f" OR {__value}"
         return self
 
     def select(
         self,
     ) -> AbstractQueryBuilder:
-        self.query = f"SELECT "
+        self.__query = f"SELECT "
         for index, column in enumerate(self.class_table_columns):
-            self.query += f'"{column}" '
+            self.__query += f'"{column}" '
             if index != len(self.class_table_columns) - 1:
-                self.query += ", "
-        self.query += f"from {self.class_table_name}"
+                self.__query += ", "
+        self.__query += f"from {self.class_table_name}"
         return self
 
     def where(self, clause) -> AbstractQueryBuilder:
-        self.query += " WHERE "
-        self.query += clause
+        self.__query += " WHERE "
+        self.__query += clause
         return self
 
     def update(self, **kwargs) -> AbstractQueryBuilder:
         query_validators.validate(self.class_table, **kwargs)
         query_validators.update_query_validate(**kwargs)
 
-        self.query = f'UPDATE "{self.class_table_name}" SET '
+        self.__query = f'UPDATE "{self.class_table_name}" SET '
         for index, (column_name, value) in enumerate(kwargs.items()):
             if (
                 self.class_table_columns[column_name].primary_key
@@ -104,24 +104,24 @@ class QueryBuilder(AbstractQueryBuilder):
             ):
                 continue
 
-            self.query += f'"{column_name}" = ?'
+            self.__query += f'"{column_name}" = ?'
             self.query_parameters.append(value)
             if index != len(kwargs) - 1:
-                self.query += ", "
+                self.__query += ", "
 
         return self
 
     def delete(self) -> AbstractQueryBuilder:
-        self.query = f'DELETE FROM "{self.class_table_name}"'
+        self.__query = f'DELETE FROM "{self.class_table_name}"'
         return self
 
-    def _clear(self):
-        self.query = ""
+    def __clear(self):
+        self.__query = ""
         self.query_parameters = []
 
     def execute(self, connection: sqlite3.Connection) -> None | list[AbstractBaseTable]:
         try:
-            res = connection.cursor().execute(self.query, tuple(self.query_parameters))
+            res = connection.cursor().execute(self.__query, tuple(self.query_parameters))
         except sqlite3.IntegrityError as e:
             raise exceptions.IntegrityError(e)
         except sqlite3.InterfaceError:
@@ -135,7 +135,7 @@ class QueryBuilder(AbstractQueryBuilder):
 
         connection.commit()
         result = res.fetchall()
-        self._clear()
+        self.__clear()
         if not result:
             return None
         return map_query_result_with_class(self.class_table, result)

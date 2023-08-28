@@ -165,17 +165,6 @@ class AbstractQueryBuilder(ABC):
         ...
 
     @abstractmethod
-    def _set_class_table_values(self) -> None:
-        ...
-
-    @abstractmethod
-    def _clear(self) -> None:
-        """
-        Clears the query builder.
-        """
-        ...
-
-    @abstractmethod
     def update(self, **kwargs) -> "AbstractQueryBuilder":
         """
         Update row(s) in the table.
